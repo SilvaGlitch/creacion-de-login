@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de Equipos</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #43469e;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 800px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #6b0b0b;
+            color: white;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        a {
+            text-decoration: none;
+            color: #b61639;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .no-data {
+            color: #888;
+            font-style: italic;
+        }
+
+        .link-bottom {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Listado de Equipos Recibidos</h1>
+
+        {% if equipos %}
+            <table>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Equipo</th>
+                    <th>Problema</th>
+                    <th>Detalle</th>
+                </tr>
+                {% for equipo in equipos %}
+                <tr>
+                    <td>{{ equipo.cliente }}</td>
+                    <td>{{ equipo.equipo }}</td>
+                    <td>{{ equipo.problema }}</td>
+                    <td><a href="/recepcion/detalle/{{ equipo.cliente }}/">Ver</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p class="no-data">No hay equipos registrados.</p>
+        {% endif %}
+
+        <a href="/recepcion/registrar/" class="link-bottom">Registrar otro equipo</a>
+    </div>
+</body>
+</html>

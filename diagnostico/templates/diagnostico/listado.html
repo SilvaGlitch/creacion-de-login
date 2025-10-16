@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listado de Diagnósticos</title>
+</head>
+<body>
+    <h1>Diagnósticos Realizados</h1>
+
+    {% if diagnosticos %}
+        <table border="1">
+            <tr>
+                <th>Estudiante</th>
+                <th>Equipo</th>
+                <th>Diagnóstico</th>
+                <th>Solución</th>
+                <th>Tipo</th>
+            </tr>
+            {% for d in diagnosticos %}
+            <tr>
+                <td>{{ d.estudiante }}</td>
+                <td>{{ d.equipo }}</td>
+                <td>{{ d.diagnostico }}</td>
+                <td>{{ d.solucion }}</td>
+                <td>{{ d.tipo }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>No hay diagnósticos aún.</p>
+    {% endif %}
+</body>
+</html>

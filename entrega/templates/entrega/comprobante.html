@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comprobante de Entrega</title>
+</head>
+<body>
+    <h1>Comprobante de Entrega</h1>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% else %}
+        <p><strong>Cliente:</strong> {{ diagnostico.cliente }}</p>
+        <p><strong>Equipo:</strong> {{ diagnostico.equipo }}</p>
+        <p><strong>Diagnóstico:</strong> {{ diagnostico.diagnostico }}</p>
+        <p><strong>Solución:</strong> {{ diagnostico.solucion }}</p>
+        <p><strong>Tipo:</strong> {{ diagnostico.tipo }}</p>
+        <p><strong>Estado Final:</strong> {{ entrega.estado }}</p>
+        <p><strong>Observaciones:</strong> {{ entrega.observaciones }}</p>
+    {% endif %}
+
+    <br><a href="/entrega/verificar/">Volver</a>
+</body>
+</html>

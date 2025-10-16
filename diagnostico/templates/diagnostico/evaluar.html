@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Evaluar Equipo</title>
+</head>
+<body>
+    <h1>Evaluar Equipo</h1>
+
+    {% if mensaje %}
+        <p style="color: green;">{{ mensaje }}</p>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        <label>Estudiante:</label><br>
+        <input type="text" name="estudiante" value="{{ request.GET.estudiante }}" required><br><br>
+
+        <label>Equipo:</label><br>
+        <input type="text" name="equipo" value="{{ request.GET.equipo }}" required><br><br>
+
+        <label>Diagnóstico:</label><br>
+        <textarea name="diagnostico" required></textarea><br><br>
+
+        <label>Solución:</label><br>
+        <textarea name="solucion" required></textarea><br><br>
+
+        <input type="submit" value="Registrar Diagnóstico">
+    </form>
+</body>
+</html>

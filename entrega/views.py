@@ -1,8 +1,8 @@
-# entrega/views.py
 from django.shortcuts import render, redirect
 
-# Simular base de datos de entregas
+
 entregas = []
+
 diagnosticos_simulados = [
     {
         'cliente': 'Pedro',
@@ -11,7 +11,13 @@ diagnosticos_simulados = [
         'solucion': 'Reemplazo de tornillos',
         'tipo': 'Correctiva'
     },
-    # Puedes agregar más para pruebas
+    {
+        'cliente': 'Maria',
+        'equipo': 'Laptop Dell',
+        'diagnostico': 'Pantalla parpadea',
+        'solucion': 'Reemplazo de pantalla',
+        'tipo': 'Correctiva'
+    },
 ]
 
 def verificar_cliente(request):
@@ -19,21 +25,28 @@ def verificar_cliente(request):
         return redirect('/login/')
 
     cliente_info = None
-    if request.method == 'GET' and 'cliente' in request.GET:
-        nombre = request.GET.get('cliente')
-        for d in diagnosticos_simulados:
-            if d['cliente'].lower() == nombre.lower():
-                cliente_info = d
-                break
+    mensaje = ''
 
-    return render(request, 'entrega/verificar.html', {'cliente': cliente_info})
+    if request.method == 'POST':
+        nombre = request.POST.get('cliente', '').strip()
+        if nombre:
+            for d in diagnosticos_simulados:
+                if d['cliente'].lower() == nombre.lower():
+                    cliente_info = d
+                    break
+            if not cliente_info:
+                mensaje = 'Cliente no encontrado.'
+
+    return render(request, 'entrega/verificar.html', {
+        'cliente': cliente_info,
+        'mensaje': mensaje
+    })
 
 
 def reporte_entrega(request):
     if not request.session.get('autenticado'):
         return redirect('/login/')
 
-    mensaje = ''
     if request.method == 'POST':
         cliente = request.POST.get('cliente')
         estado = request.POST.get('estado')
@@ -46,7 +59,6 @@ def reporte_entrega(request):
         }
 
         entregas.append(entrega)
-        mensaje = 'Reporte registrado correctamente.'
         request.session['comprobante_cliente'] = cliente
 
         return redirect('/entrega/comprobante/')
@@ -79,4 +91,3 @@ def comprobante_entrega(request):
         'diagnostico': datos,
         'entrega': entrega_final
     })
-

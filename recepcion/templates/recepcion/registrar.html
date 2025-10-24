@@ -1,106 +1,93 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Registrar Equipo</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-color: #3b2e65;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
-            background-color: #474392;
-            font-family: Arial, sans-serif;
         }
-
-        .container {
-            background: white;
+        .form-container {
+            background-color: #fff;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             width: 400px;
-            text-align: center;
         }
-
-        h1 {
+        h2 {
+            text-align: center;
             margin-bottom: 20px;
         }
-
         label {
             display: block;
-            text-align: left;
             margin-top: 10px;
             font-weight: bold;
         }
-
         input[type="text"],
-        textarea {
+        textarea,
+        select {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
             box-sizing: border-box;
         }
-
-        textarea {
-            height: 80px;
-            resize: vertical;
-        }
-
-        input[type="submit"] {
+        button {
             margin-top: 20px;
             width: 100%;
             padding: 10px;
-            background-color: #771919;
+            background-color: #007BFF;
             color: white;
+            font-size: 16px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
-
-        input[type="submit"]:hover {
-            background-color: #601313;
+        button:hover {
+            background-color: #0056b3;
         }
-
-        p {
+        .mensaje {
+            text-align: center;
+            margin-bottom: 15px;
             color: green;
-        }
-
-        a {
-            display: inline-block;
-            margin-top: 15px;
-            text-decoration: none;
-            color: #6f1212;
-        }
-
-        a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Registrar Equipo</h1>
-
+    <div class="form-container">
+        <h2>Registrar Equipo</h2>
         {% if mensaje %}
-            <p>{{ mensaje }}</p>
+            <div class="mensaje">{{ mensaje }}</div>
         {% endif %}
-
-        <form method="post">
+        <form method="POST">
             {% csrf_token %}
-            <label>Nombre del Cliente:</label>
+            
+            <label>Nombre del cliente:</label>
             <input type="text" name="cliente" required>
 
-            <label>Tipo de Equipo:</label>
-            <input type="text" name="equipo" required>
+            <label>Contacto:</label>
+            <input type="text" name="contacto" required>
 
-            <label>Problema Informado:</label>
-            <textarea name="problema" required></textarea>
+            <label>Descripción de la falla:</label>
+            <textarea name="descripcion_falla" rows="3"></textarea>
 
-            <input type="submit" value="Registrar">
+            <label>Estado:</label>
+            <select name="estado">
+                <option value="En recepción" selected>En recepción</option>
+                <option value="En reparación">En reparación</option>
+                <option value="Reparado">Reparado</option>
+                <option value="Entregado">Entregado</option>
+            </select>
+            <a href="listado.html">ver lista de equipo</a>
+
+            <button type="submit">Registrar equipo</button>
         </form>
-
-        <a href="/recepcion/listado/">Ver Listado de Equipos</a>
     </div>
 </body>
 </html>

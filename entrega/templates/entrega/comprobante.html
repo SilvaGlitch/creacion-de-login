@@ -2,22 +2,54 @@
 <html>
 <head>
     <title>Comprobante de Entrega</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #35316e;
+            margin: 0;
+        }
+
+        .card {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-    <h1>Comprobante de Entrega</h1>
-
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% else %}
-        <p><strong>Cliente:</strong> {{ diagnostico.cliente }}</p>
-        <p><strong>Equipo:</strong> {{ diagnostico.equipo }}</p>
-        <p><strong>Diagnóstico:</strong> {{ diagnostico.diagnostico }}</p>
-        <p><strong>Solución:</strong> {{ diagnostico.solucion }}</p>
-        <p><strong>Tipo:</strong> {{ diagnostico.tipo }}</p>
-        <p><strong>Estado Final:</strong> {{ entrega.estado }}</p>
-        <p><strong>Observaciones:</strong> {{ entrega.observaciones }}</p>
-    {% endif %}
-
-    <br><a href="/entrega/verificar/">Volver</a>
+    <div class="card">
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% else %}
+            <h2>Comprobante de Entrega</h2>
+            <p><strong>Cliente:</strong> {{ entrega.cliente }}</p>
+            <p><strong>Equipo:</strong> {{ diagnostico.equipo }}</p>
+            <p><strong>Diagnóstico:</strong> {{ diagnostico.diagnostico }}</p>
+            <p><strong>Solución:</strong> {{ diagnostico.solucion }}</p>
+            <p><strong>Tipo:</strong> {{ diagnostico.tipo }}</p>
+            <p><strong>Estado de entrega:</strong> {{ entrega.estado }}</p>
+            <p><strong>Observaciones:</strong> {{ entrega.observaciones }}</p>
+        {% endif %}
+    </div>
 </body>
 </html>
+

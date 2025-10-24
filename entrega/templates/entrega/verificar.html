@@ -1,104 +1,93 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Verificar Cliente</title>
+    <title>Entrega - Verificar Cliente</title>
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
+            min-height: 100vh;
             font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
         }
 
         .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             width: 400px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 25px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             text-align: center;
         }
 
-        h1, h2 {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            text-align: left;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        input[type="text"],
-        select,
-        textarea {
+        input, textarea, button {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
             box-sizing: border-box;
         }
 
-        textarea {
-            height: 80px;
-            resize: vertical;
-        }
-
-        input[type="submit"] {
-            margin-top: 20px;
-            width: 100%;
-            padding: 10px;
+        button {
             background-color: #007BFF;
             color: white;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
+        button:hover {
             background-color: #0056b3;
         }
 
-        p {
-            text-align: left;
+        .error {
+            color: red;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Verificar Estado de Equipo</h1>
-
-        <form method="get">
-            <label>Nombre del Cliente:</label>
-            <input type="text" name="cliente" required>
-            <input type="submit" value="Buscar">
-        </form>
+        <!-- Card para buscar cliente -->
+        <div class="card">
+            <h2>Verificar Cliente</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="text" name="cliente" placeholder="Ingrese nombre del cliente" required>
+                <button type="submit">Buscar</button>
+            </form>
+            {% if mensaje %}
+                <p class="error">{{ mensaje }}</p>
+            {% endif %}
+        </div>
 
         {% if cliente %}
-            <h2>Resultado:</h2>
+        <!-- Card para mostrar cliente y registrar entrega -->
+        <div class="card">
+            <h3>Información del Cliente</h3>
             <p><strong>Cliente:</strong> {{ cliente.cliente }}</p>
             <p><strong>Equipo:</strong> {{ cliente.equipo }}</p>
             <p><strong>Diagnóstico:</strong> {{ cliente.diagnostico }}</p>
             <p><strong>Solución:</strong> {{ cliente.solucion }}</p>
+            <p><strong>Tipo:</strong> {{ cliente.tipo }}</p>
 
-            <form method="post" action="/entrega/reporte/">
+            <h4>Registrar Entrega</h4>
+            <form action="/entrega/reporte/" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="cliente" value="{{ cliente.cliente }}">
-                <label>Estado final:</label>
-                <select name="estado">
-                    <option value="Entregado">Entregado</option>
-                    <option value="Pendiente">Pendiente</option>
-                </select>
-
-                <label>Observaciones:</label>
-                <textarea name="observaciones"></textarea>
-
-                <input type="submit" value="Registrar Estado Final">
+                <input type="text" name="estado" placeholder="Estado del equipo" required>
+                <textarea name="observaciones" placeholder="Observaciones"></textarea>
+                <button type="submit">Registrar Entrega</button>
             </form>
+        </div>
         {% endif %}
     </div>
 </body>

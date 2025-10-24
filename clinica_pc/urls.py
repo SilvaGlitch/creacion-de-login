@@ -19,7 +19,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('login.urls')),  # 👈 La raíz ahora mostrará el login
+    path('', include('login.urls')),
     path('recepcion/', include('recepcion.urls')),
     path('diagnostico/', include('diagnostico.urls')),
     path('entrega/', include('entrega.urls')),

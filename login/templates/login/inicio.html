@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menú Principal</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #483e6b;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: rgb(255, 255, 255);
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            color: #333;
+        }
+
+        p {
+            margin-top: 10px;
+            color: #555;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #007BFF;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #a71d2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tarjeta de bienvenida -->
+        <div class="card">
+            <h1>Bienvenido a Clínica del PC</h1>
+            <p>Selecciona el módulo al que deseas acceder:</p>
+        </div>
+
+        <!-- Tarjeta de opciones -->
+        <div class="card">
+            <ul>
+                <li><a href="/recepcion/">Recepción</a></li>
+                <li><a href="/diagnostico/listado/">Diagnóstico</a></li>
+                <li><a href="/entrega/">Entrega</a></li>
+            </ul>
+
+            <form action="/logout/" method="post">
+                {% csrf_token %}
+                <button type="submit">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+

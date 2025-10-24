@@ -9,15 +9,16 @@ def login_view(request):
 
         if usuario == 'inacap' and clave == 'clinica2025':
             request.session['autenticado'] = True
-            return redirect('/recepcion/registrar/')
+            return redirect('/inicio/')  
 
         user = authenticate(request, username=usuario, password=clave)
         if user is not None:
             login(request, user)
+            request.session['autenticado'] = True
             if user.is_superuser:
                 return redirect('/admin/')
             else:
-                return redirect('/recepcion/')
+                return redirect('/inicio/') 
         else:
             messages.error(request, 'Usuario o clave incorrectos.')
 
@@ -25,8 +26,14 @@ def login_view(request):
 
 
 def logout_view(request):
-
     if 'autenticado' in request.session:
         del request.session['autenticado']
     logout(request)
-    return redirect('/')
+    return redirect('/')  
+
+
+def inicio(request):
+    if not request.session.get('autenticado'):
+        return redirect('/')  
+
+    return render(request, 'login/inicio.html')

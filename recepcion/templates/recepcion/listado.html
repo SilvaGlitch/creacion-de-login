@@ -77,16 +77,18 @@
             <table>
                 <tr>
                     <th>Cliente</th>
-                    <th>Equipo</th>
+                    <th>Contacto</th>
                     <th>Problema</th>
-                    <th>Detalle</th>
+                    <th>Fecha Recepción</th>
+                    <th>Estado</th>
                 </tr>
                 {% for equipo in equipos %}
                 <tr>
                     <td>{{ equipo.cliente }}</td>
-                    <td>{{ equipo.equipo }}</td>
-                    <td>{{ equipo.problema }}</td>
-                    <td><a href="/recepcion/detalle/{{ equipo.cliente }}/">Ver</a></td>
+                    <td>{{ equipo.contacto }}</td>
+                    <td>{{ equipo.descripcion_falla }}</td>
+                    <td>{{ equipo.fecha_recepcion }}</td>
+                    <td>{{ equipo.estado }}</td>
                 </tr>
                 {% endfor %}
             </table>

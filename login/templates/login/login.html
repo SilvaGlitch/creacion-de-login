@@ -22,8 +22,9 @@
             width: 300px;
         }
 
-        h2 {
+        h1 {
             margin-bottom: 20px;
+            color: #333;
         }
 
         label {
@@ -41,7 +42,7 @@
             box-sizing: border-box;
         }
 
-        input[type="submit"] {
+        button {
             margin-top: 20px;
             width: 100%;
             padding: 10px;
@@ -52,31 +53,38 @@
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
+        button:hover {
             background-color: #0056b3;
         }
 
         p {
             margin-top: 10px;
+            color: red;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Inicio de sesión</h2>
-        {% if error %}
-            <p style="color:red;">{{ error }}</p>
+        <h1>Iniciar Sesión</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
         {% endif %}
-        <form method="post">
+
+        <form method="POST">
             {% csrf_token %}
             <label>Usuario:</label>
-            <input type="text" name="usuario">
+            <input type="text" name="usuario" required>
 
-            <label>Clave:</label>
-            <input type="password" name="clave">
+            <label>Contraseña:</label>
+            <input type="password" name="clave" required>
 
-            <input type="submit" value="Ingresar">
+
+            <button type="submit">Entrar</button>
         </form>
     </div>
 </body>
 </html>
+

@@ -1,55 +1,49 @@
-# recepcion/views.py
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from .models import Equipo 
 
-# Lista simulada de equipos recibidos
-equipos = []
-
-# Proteger vistas si no está autenticado
 def verificar_sesion(request):
-    if not request.session.get('autenticado'):
+    if not request.session.get('autenticado') and not request.user.is_authenticated:
         return redirect('/login/')
 
 def registrar_equipo(request):
-    if not request.session.get('autenticado'):
-        return redirect('/login/')
+    sesion_valida = verificar_sesion(request)
+    if sesion_valida:
+        return sesion_valida 
 
     mensaje = ''
     if request.method == 'POST':
         cliente = request.POST.get('cliente')
-        equipo = request.POST.get('equipo')
-        problema = request.POST.get('problema')
+        contacto = request.POST.get('contacto')
+        descripcion_falla = request.POST.get('descripcion_falla')
 
-        nuevo_equipo = {
-            'cliente': cliente,
-            'equipo': equipo,
-            'problema': problema
-        }
+        Equipo.objects.create(
+            cliente=cliente,
+            contacto=contacto,
+            descripcion_falla=descripcion_falla
+        )
 
-        equipos.append(nuevo_equipo)
         mensaje = 'Equipo registrado con éxito.'
 
     return render(request, 'recepcion/registrar.html', {'mensaje': mensaje})
 
-
 def listado_equipos(request):
-    if not request.session.get('autenticado'):
-        return redirect('/login/')
+    sesion_valida = verificar_sesion(request)
+    if sesion_valida:
+        return sesion_valida
+
+    equipos = Equipo.objects.all()  
+
     return render(request, 'recepcion/listado.html', {'equipos': equipos})
 
-
 def detalle_equipo(request, nombre):
-    if not request.session.get('autenticado'):
-        return redirect('/login/')
+    sesion_valida = verificar_sesion(request)
+    if sesion_valida:
+        return sesion_valida
 
-    equipo_detalle = None
-    for equipo in equipos:
-        if equipo['cliente'] == nombre:
-            equipo_detalle = equipo
-            break
-
-    if not equipo_detalle:
+    try:
+        equipo_detalle = Equipo.objects.get(cliente=nombre)
+    except Equipo.DoesNotExist:
         return HttpResponse("Equipo no encontrado")
 
     return render(request, 'recepcion/detalle.html', {'equipo': equipo_detalle})
-

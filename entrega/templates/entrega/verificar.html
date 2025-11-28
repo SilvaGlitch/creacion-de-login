@@ -1,94 +1,328 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Entrega - Verificar Cliente</title>
+    <meta charset="UTF-8">
+    <title>Verificar Cliente - Módulo de Entrega</title>
     <style>
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             margin: 0;
+            background-color: #43469e;
+            font-family: Arial, sans-serif;
         }
 
         .container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 800px;
+        }
+
+        h1, h2, h3 {
+            color: #6b0b0b;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         .card {
-            background-color: white;
-            padding: 25px 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-align: center;
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #43469e;
         }
 
-        input, textarea, button {
+        .search-card {
+            border-left-color: #007bff;
+        }
+
+        .client-card {
+            border-left-color: #28a745;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        input[type="text"], textarea, select {
             width: 100%;
-            padding: 10px;
-            margin-top: 10px;
+            padding: 12px;
+            border: 2px solid #ddd;
             border-radius: 5px;
-            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: border-color 0.3s;
             box-sizing: border-box;
         }
 
-        button {
-            background-color: #007BFF;
-            color: white;
+        textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            border-color: #43469e;
+            outline: none;
+            box-shadow: 0 0 5px rgba(67, 70, 158, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
         }
 
-        button:hover {
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
         }
 
-        .error {
-            color: red;
-            margin-top: 10px;
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .client-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 3px solid #007bff;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .info-value {
+            color: #212529;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        .help-section {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .help-section h4 {
+            margin: 0 0 10px 0;
+            color: #0056b3;
+        }
+
+        .client-list {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Card para buscar cliente -->
-        <div class="card">
-            <h2>Verificar Cliente</h2>
+        <h1> Módulo de Entrega</h1>
+        <h2>Verificar Estado de Equipo</h2>
+
+        <!-- Card de búsqueda -->
+        <div class="card search-card">
+            <h3> Buscar Cliente</h3>
+            
+            <!-- Sección de ayuda -->
+            <div class="help-section">
+                <h4> ¿Qué clientes buscar?</h4>
+                <p>Ingrese el nombre exacto del cliente que registró en el módulo de Recepción.</p>
+                <p><strong>Ejemplo:</strong> Si en recepción registró "Juan Pérez", busque exactamente "Juan Pérez"</p>
+            </div>
+
             <form method="post">
                 {% csrf_token %}
-                <input type="text" name="cliente" placeholder="Ingrese nombre del cliente" required>
-                <button type="submit">Buscar</button>
+                <div class="form-group">
+                    <label for="cliente">
+                         Nombre del Cliente
+                    </label>
+                    <input type="text" id="cliente" name="cliente" 
+                           placeholder="Ingrese el nombre exacto del cliente..." 
+                           value="{{ request.POST.cliente }}" 
+                           required>
+                </div>
+                <div class="button-group">
+                    <a href="{% url 'inicio' %}" class="btn btn-secondary">
+                        ← Volver al Inicio
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                         Buscar Cliente
+                    </button>
+                </div>
             </form>
+
             {% if mensaje %}
-                <p class="error">{{ mensaje }}</p>
+            <div class="alert alert-error">
+                ⚠️ {{ mensaje }}
+            </div>
             {% endif %}
         </div>
 
         {% if cliente %}
-        <!-- Card para mostrar cliente y registrar entrega -->
-        <div class="card">
-            <h3>Información del Cliente</h3>
-            <p><strong>Cliente:</strong> {{ cliente.cliente }}</p>
-            <p><strong>Equipo:</strong> {{ cliente.equipo }}</p>
-            <p><strong>Diagnóstico:</strong> {{ cliente.diagnostico }}</p>
-            <p><strong>Solución:</strong> {{ cliente.solucion }}</p>
-            <p><strong>Tipo:</strong> {{ cliente.tipo }}</p>
+        <!-- Card de información del cliente -->
+        <div class="card client-card">
+            <h3> Información del Cliente</h3>
+            
+            <div class="client-info">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Cliente</div>
+                        <div class="info-value">{{ cliente.cliente }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Equipo</div>
+                        <div class="info-value">{{ cliente.equipo }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Diagnóstico</div>
+                        <div class="info-value">{{ cliente.diagnostico }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Solución Aplicada</div>
+                        <div class="info-value">{{ cliente.solucion }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Tipo de Solución</div>
+                        <div class="info-value">{{ cliente.tipo }}</div>
+                    </div>
+                    {% if cliente.estado_actual %}
+                    <div class="info-item">
+                        <div class="info-label">Estado Actual</div>
+                        <div class="info-value">{{ cliente.estado_actual }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
 
-            <h4>Registrar Entrega</h4>
+            <h4> Registrar Entrega</h4>
+
             <form action="/entrega/reporte/" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="cliente" value="{{ cliente.cliente }}">
-                <input type="text" name="estado" placeholder="Estado del equipo" required>
-                <textarea name="observaciones" placeholder="Observaciones"></textarea>
-                <button type="submit">Registrar Entrega</button>
+                
+                <div class="form-group">
+                    <label>Estado Final</label>
+                    <select name="estado" required>
+                        <option value="">Seleccione estado...</option>
+                        <option value="entregado"> Entregado</option>
+                        <option value="pendiente"> Pendiente</option>
+                        <option value="observado"> Observado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Observaciones</label>
+                    <textarea name="observaciones" placeholder="Observaciones para el cliente..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <a href="/entrega/verificar/" class="btn btn-secondary">
+                         Nueva Búsqueda
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                         Registrar Entrega
+                    </button>
+                </div>
             </form>
         </div>
         {% endif %}
+
+        <!-- Información para desarrollo -->
+        <div class="client-list">
+            <h4> Para Desarrolladores (Clientes en BD):</h4>
+            <p><strong>Nota:</strong> El sistema ahora busca en la base de datos real.</p>
+            <p>Debe usar exactamente el mismo nombre que registró en Recepción.</p>
+        </div>
     </div>
 </body>
 </html>

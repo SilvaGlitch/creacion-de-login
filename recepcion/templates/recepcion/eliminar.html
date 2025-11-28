@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Equipo - Clínica del PC</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #43469e;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+
+        .warning-icon {
+            font-size: 48px;
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+
+        .equipo-info {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #dc3545;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .equipo-info p {
+            margin: 5px 0;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .alert-message {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="warning-icon">⚠️</div>
+        <h1>Confirmar Eliminación</h1>
+        
+        <div class="alert-message">
+            <strong>¿Está seguro que desea eliminar este equipo?</strong><br>
+            Esta acción no se puede deshacer.
+        </div>
+
+        <div class="equipo-info">
+            <p><strong>Cliente:</strong> {{ equipo.cliente }}</p>
+            <p><strong>Contacto:</strong> {{ equipo.contacto|default:"No especificado" }}</p>
+            <p><strong>Problema reportado:</strong> {{ equipo.descripcion_falla }}</p>
+            <p><strong>Estado actual:</strong> {{ equipo.estado }}</p>
+            <p><strong>Fecha recepción:</strong> {{ equipo.fecha_recepcion|date:"d/m/Y H:i" }}</p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="button-group">
+                <a href="{% url 'listado_equipos' %}" class="btn btn-secondary">← Cancelar</a>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está completamente seguro? Esta acción eliminará permanentemente el equipo.')">
+                     Sí, Eliminar
+                </button>
+            </div>
+        </form>
+
+        {% if messages %}
+            <div style="margin-top: 20px; padding: 10px; background-color: #d4edda; border-radius: 5px;">
+                {% for message in messages %}
+                    <p style="margin: 0; color: #155724;"><strong>✅ {{ message }}</strong></p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Confirmación adicional
+        document.querySelector('form').addEventListener('submit', function(e) {
+            if (!confirm('¿ESTÁ COMPLETAMENTE SEGURO?\n\nEsta acción eliminará permanentemente el equipo de {{ equipo.cliente }} y no se podrá recuperar.')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,32 +1,283 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Listado de Diagnósticos</title>
+    <meta charset="UTF-8">
+    <title>Listado de Diagnósticos - Clínica del PC</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #43469e;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            max-width: 1200px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #6b0b0b;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #6b0b0b;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f0f0f0;
+            transition: background-color 0.3s;
+        }
+
+        .no-data {
+            color: #888;
+            font-style: italic;
+            padding: 30px;
+            font-size: 18px;
+        }
+
+        .button-group {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #43469e;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #353780;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .tipo-correctiva {
+            background-color: #dc3545;
+        }
+
+        .tipo-preventiva {
+            background-color: #28a745;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .title-section h1 {
+            margin: 0;
+            color: #6b0b0b;
+        }
+
+        .title-section p {
+            margin: 5px 0 0 0;
+            color: #666;
+        }
+
+        .summary-cards {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #43469e, #6b0b0b);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            width: 30%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .summary-card h3 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .summary-card p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .header-section {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .summary-cards {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .summary-card {
+                width: 100%;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Diagnósticos Realizados</h1>
+    <div class="container">
+        <!-- Encabezado mejorado -->
+        <div class="header-section">
+            <div class="title-section">
+                <h1> Diagnósticos Realizados</h1>
+                <p>Sistema de Gestión - Clínica del PC</p>
+            </div>
 
-    {% if diagnosticos %}
-        <table border="1">
-            <tr>
-                <th>Estudiante</th>
-                <th>Equipo</th>
-                <th>Diagnóstico</th>
-                <th>Solución</th>
-                <th>Tipo</th>
-            </tr>
-            {% for d in diagnosticos %}
-            <tr>
-                <td>{{ d.estudiante }}</td>
-                <td>{{ d.equipo }}</td>
-                <td>{{ d.diagnostico }}</td>
-                <td>{{ d.solucion }}</td>
-                <td>{{ d.tipo }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No hay diagnósticos aún.</p>
-    {% endif %}
+        </div>
+
+        <!-- Tarjetas de resumen -->
+        <div class="summary-cards">
+            <div class="summary-card">
+                <h3>{{ diagnosticos.count }}</h3>
+                <p>Total Diagnósticos</p>
+            </div>
+            <div class="summary-card">
+                <h3>{{ diagnosticos.count }}</h3>
+                <p>En Sistema</p>
+            </div>
+            <div class="summary-card">
+                <h3>INACAP</h3>
+                <p>Clínica del PC</p>
+            </div>
+        </div>
+
+        {% if diagnosticos %}
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Equipo</th>
+                        <th>Diagnóstico</th>
+                        <th>Solución</th>
+                        <th>Tipo de Solución</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in diagnosticos %}
+                    <tr>
+                        <td><strong>{{ d.estudiante }}</strong></td>
+                        <td>{{ d.equipo }}</td>
+                        <td>{{ d.diagnostico|truncatewords:10 }}</td>
+                        <td>{{ d.solucion|truncatewords:10 }}</td>
+                        <td>
+                            {% if d.tipo == 'correctiva' %}
+                                <span class="status-badge tipo-correctiva">🔧 Correctiva</span>
+                            {% elif d.tipo == 'preventiva' %}
+                                <span class="status-badge tipo-preventiva">🛡️ Preventiva</span>
+                            {% else %}
+                                <span class="status-badge" style="background-color: #6c757d;">{{ d.tipo }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="no-data">
+            <h3>No hay diagnósticos registrados</h3>
+            <p>Comienza agregando el primer diagnóstico al sistema</p>
+            <a href="/diagnostico/asignar/" class="btn btn-success">Agregar Primer Diagnóstico</a>
+        </div>
+        {% endif %}
+
+        <!-- Mensajes del sistema -->
+        {% if messages %}
+            <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; border-left: 4px solid #28a745;">
+                {% for message in messages %}
+                    <p style="margin: 0; color: #155724;"><strong>✅ {{ message }}</strong></p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="button-group">
+            <a href="{% url 'inicio' %}" class="btn"> Volver al Inicio</a>
+            <a href="/diagnostico/asignar/" class="btn btn-success">➕ Nuevo Diagnóstico</a>
+        </div>
+    </div>
 </body>
 </html>

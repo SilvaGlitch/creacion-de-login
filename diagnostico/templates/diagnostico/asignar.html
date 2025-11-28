@@ -1,19 +1,307 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Asignar Equipo</title>
+    <meta charset="UTF-8">
+    <title>Asignar Equipo - Clínica del PC</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #43469e;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #6b0b0b;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .form-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #43469e;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus {
+            border-color: #43469e;
+            outline: none;
+            box-shadow: 0 0 5px rgba(67, 70, 158, 0.3);
+        }
+
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: #43469e;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #353780;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .form-instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+
+        .form-instructions h3 {
+            margin: 0 0 10px 0;
+            color: #0056b3;
+            font-size: 16px;
+        }
+
+        .form-instructions ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+        }
+
+        .form-instructions li {
+            margin-bottom: 5px;
+        }
+
+        .icon {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+
+        /* Estilos para mensajes de éxito/error */
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
-    <h1>Asignar Equipo a Estudiante</h1>
+    <div class="container">
+        <h1>👨‍🎓 Asignar Equipo a Estudiante</h1>
 
-    <form method="get" action="/diagnostico/evaluar/">
-        <label>Estudiante:</label><br>
-        <input type="text" name="estudiante" required><br><br>
+        <!-- Instrucciones del formulario -->
+        <div class="form-instructions">
+            <h3> Instrucciones:</h3>
+            <ul>
+                <li>Asigne un equipo disponible a un estudiante para diagnóstico</li>
+                <li>Complete todos los campos obligatorios (*)</li>
+                <li>Verifique que el equipo esté disponible en recepción</li>
+            </ul>
+        </div>
 
-        <label>Equipo:</label><br>
-        <input type="text" name="equipo" required><br><br>
+        <!-- Mensajes del sistema -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {% if message.tags == 'success' %}
+                    ✅ {{ message }}
+                {% else %}
+                    ⚠️ {{ message }}
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-        <input type="submit" value="Asignar">
-    </form>
+        <div class="form-card">
+            <form method="get" action="/diagnostico/evaluar/">
+                <div class="form-group">
+                    <label for="estudiante" class="required">
+                        <span class="icon"></span>Estudiante Responsable
+                    </label>
+                    <input type="text" id="estudiante" name="estudiante" 
+                           placeholder="Ingrese el nombre completo del estudiante" 
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipo" class="required">
+                        <span class="icon"></span>Equipo a Diagnosticar
+                    </label>
+                    <input type="text" id="equipo" name="equipo" 
+                           placeholder="Ingrese la identificación del equipo (ID o descripción)" 
+                           required>
+                </div>
+
+                <div class="button-group">
+                    <a href="{% url 'inicio' %}" class="btn btn-secondary">
+                        ← Volver al Inicio
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                         Asignar Equipo
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Información adicional -->
+        <div style="margin-top: 20px; text-align: center; color: #666; font-size: 14px;">
+            <p>🔍 <strong>Nota:</strong> Después de asignar el equipo, podrá registrar el diagnóstico técnico.</p>
+        </div>
+    </div>
+
+    <script>
+        // Validación básica del formulario
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const estudianteInput = document.getElementById('estudiante');
+            const equipoInput = document.getElementById('equipo');
+
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                
+                // Validar estudiante
+                if (estudianteInput.value.trim() === '') {
+                    markInvalid(estudianteInput);
+                    isValid = false;
+                } else {
+                    markValid(estudianteInput);
+                }
+                
+                // Validar equipo
+                if (equipoInput.value.trim() === '') {
+                    markInvalid(equipoInput);
+                    isValid = false;
+                } else {
+                    markValid(equipoInput);
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Por favor, complete todos los campos obligatorios.');
+                }
+            });
+
+            function markInvalid(input) {
+                input.style.borderColor = '#dc3545';
+                input.style.boxShadow = '0 0 5px rgba(220, 53, 69, 0.3)';
+            }
+
+            function markValid(input) {
+                input.style.borderColor = '#28a745';
+                input.style.boxShadow = '0 0 5px rgba(40, 167, 69, 0.3)';
+            }
+
+            // Resetear estilos cuando el usuario empiece a escribir
+            estudianteInput.addEventListener('input', function() {
+                this.style.borderColor = '#ddd';
+                this.style.boxShadow = 'none';
+            });
+
+            equipoInput.addEventListener('input', function() {
+                this.style.borderColor = '#ddd';
+                this.style.boxShadow = 'none';
+            });
+        });
+    </script>
 </body>
 </html>

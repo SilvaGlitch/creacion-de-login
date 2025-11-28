@@ -1,24 +1,9 @@
+# entrega/views.py
 from django.shortcuts import render, redirect
+from recepcion.models import Equipo  # Importar el modelo real
 
-
+# Lista para almacenar entregas temporalmente (en una app real usarías un modelo)
 entregas = []
-
-diagnosticos_simulados = [
-    {
-        'cliente': 'Pedro',
-        'equipo': 'Notebook HP',
-        'diagnostico': 'Placa suelta',
-        'solucion': 'Reemplazo de tornillos',
-        'tipo': 'Correctiva'
-    },
-    {
-        'cliente': 'Maria',
-        'equipo': 'Laptop Dell',
-        'diagnostico': 'Pantalla parpadea',
-        'solucion': 'Reemplazo de pantalla',
-        'tipo': 'Correctiva'
-    },
-]
 
 def verificar_cliente(request):
     if not request.session.get('autenticado'):
@@ -28,20 +13,45 @@ def verificar_cliente(request):
     mensaje = ''
 
     if request.method == 'POST':
-        nombre = request.POST.get('cliente', '').strip()
-        if nombre:
-            for d in diagnosticos_simulados:
-                if d['cliente'].lower() == nombre.lower():
-                    cliente_info = d
-                    break
-            if not cliente_info:
-                mensaje = 'Cliente no encontrado.'
+        nombre_cliente = request.POST.get('cliente', '').strip()
+        
+        if nombre_cliente:
+            try:
+                # BUSCAR EN LA BASE DE DATOS REAL
+                equipo = Equipo.objects.get(cliente__iexact=nombre_cliente)
+                
+                cliente_info = {
+                    'cliente': equipo.cliente,
+                    'equipo': f"{getattr(equipo, 'tipo_equipo', 'Equipo')} - {equipo.descripcion_falla[:30]}...",
+                    'diagnostico': equipo.descripcion_falla,
+                    'solucion': 'Diagnóstico pendiente',  # Por defecto
+                    'tipo': 'Por determinar',
+                    'estado_actual': getattr(equipo, 'estado', 'En proceso')
+                }
+                
+            except Equipo.DoesNotExist:
+                # Si no encuentra exacto, buscar parcialmente
+                equipos = Equipo.objects.filter(cliente__icontains=nombre_cliente)
+                if equipos.exists():
+                    equipo = equipos.first()
+                    cliente_info = {
+                        'cliente': equipo.cliente,
+                        'equipo': f"{getattr(equipo, 'tipo_equipo', 'Equipo')}",
+                        'diagnostico': equipo.descripcion_falla,
+                        'solucion': 'Diagnóstico pendiente',
+                        'tipo': 'Por determinar',
+                        'estado_actual': getattr(equipo, 'estado', 'En proceso')
+                    }
+                else:
+                    mensaje = f'No se encontró ningún equipo para el cliente: {nombre_cliente}'
+                    
+            except Exception as e:
+                mensaje = f'Error al buscar cliente: {str(e)}'
 
     return render(request, 'entrega/verificar.html', {
         'cliente': cliente_info,
         'mensaje': mensaje
     })
-
 
 def reporte_entrega(request):
     if not request.session.get('autenticado'):
@@ -50,7 +60,7 @@ def reporte_entrega(request):
     if request.method == 'POST':
         cliente = request.POST.get('cliente')
         estado = request.POST.get('estado')
-        observaciones = request.POST.get('observaciones')
+        observaciones = request.POST.get('observaciones', '')
 
         entrega = {
             'cliente': cliente,
@@ -65,29 +75,27 @@ def reporte_entrega(request):
 
     return redirect('/entrega/verificar/')
 
-
 def comprobante_entrega(request):
     if not request.session.get('autenticado'):
         return redirect('/login/')
 
     cliente = request.session.get('comprobante_cliente')
-    datos = None
+    
+    if not cliente:
+        return render(request, 'entrega/comprobante.html', {'error': 'No se encontró información del cliente.'})
+
+    # Buscar la entrega más reciente para este cliente
     entrega_final = None
-
-    for d in diagnosticos_simulados:
-        if d['cliente'] == cliente:
-            datos = d
-            break
-
-    for e in entregas:
+    for e in reversed(entregas):  # Buscar desde la más reciente
         if e['cliente'] == cliente:
             entrega_final = e
             break
 
-    if not datos or not entrega_final:
-        return render(request, 'entrega/comprobante.html', {'error': 'No se encontró información.'})
+    if not entrega_final:
+        return render(request, 'entrega/comprobante.html', {'error': 'No se encontró información de entrega.'})
 
     return render(request, 'entrega/comprobante.html', {
-        'diagnostico': datos,
+        'cliente': cliente,
         'entrega': entrega_final
     })
+    

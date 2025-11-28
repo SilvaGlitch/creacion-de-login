@@ -1,30 +1,438 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Evaluar Equipo</title>
+    <meta charset="UTF-8">
+    <title>Evaluar Equipo - Clínica del PC</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #43469e;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: #6b0b0b;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+        }
+
+        .form-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        input[type="text"]:focus, textarea:focus, select:focus {
+            border-color: #43469e;
+            outline: none;
+            box-shadow: 0 0 5px rgba(67, 70, 158, 0.3);
+        }
+
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .form-instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+
+        .form-instructions h3 {
+            margin: 0 0 10px 0;
+            color: #0056b3;
+            font-size: 16px;
+        }
+
+        .form-instructions ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #555;
+        }
+
+        .form-instructions li {
+            margin-bottom: 5px;
+        }
+
+        .icon {
+            margin-right: 8px;
+        }
+
+        .assignment-info {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .assignment-info h3 {
+            margin: 0 0 10px 0;
+            color: #856404;
+            font-size: 16px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .info-item {
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            border: 1px solid #ffeaa7;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #856404;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .character-count {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .tipo-solucion-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tipo-option {
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tipo-option:hover {
+            border-color: #43469e;
+            background-color: #f8f9fa;
+        }
+
+        .tipo-option.selected {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+
+        .tipo-option input[type="radio"] {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Evaluar Equipo</h1>
+    <div class="container">
+        <h1> Evaluar Equipo Técnico</h1>
 
-    {% if mensaje %}
-        <p style="color: green;">{{ mensaje }}</p>
-    {% endif %}
+        <!-- Mensaje de éxito -->
+        {% if mensaje %}
+        <div class="alert alert-success">
+             {{ mensaje }}
+        </div>
+        {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
-        <label>Estudiante:</label><br>
-        <input type="text" name="estudiante" value="{{ request.GET.estudiante }}" required><br><br>
+        <!-- Información de la asignación -->
+        <div class="assignment-info">
+            <h3> Información de Asignación</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Estudiante:</span><br>
+                    <strong>{{ request.GET.estudiante }}</strong>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Equipo:</span><br>
+                    <strong>{{ request.GET.equipo }}</strong>
+                </div>
+            </div>
+        </div>
 
-        <label>Equipo:</label><br>
-        <input type="text" name="equipo" value="{{ request.GET.equipo }}" required><br><br>
+        <!-- Instrucciones del formulario -->
+        <div class="form-instructions">
+            <h3> Instrucciones para el Diagnóstico:</h3>
+            <ul>
+                <li>Describa detalladamente el problema encontrado</li>
+                <li>Especifique la solución técnica aplicada</li>
+                <li>Seleccione el tipo de solución realizada</li>
+                <li>Complete todos los campos obligatorios (*)</li>
+            </ul>
+        </div>
 
-        <label>Diagnóstico:</label><br>
-        <textarea name="diagnostico" required></textarea><br><br>
+        <div class="form-card">
+            <form method="post">
+                {% csrf_token %}
+                
+                <!-- Campos ocultos para mantener la información de asignación -->
+                <input type="hidden" name="estudiante" value="{{ request.GET.estudiante }}">
+                <input type="hidden" name="equipo" value="{{ request.GET.equipo }}">
 
-        <label>Solución:</label><br>
-        <textarea name="solucion" required></textarea><br><br>
+                <div class="form-group">
+                    <label for="diagnostico" class="required">
+                        <span class="icon"></span>Diagnóstico Técnico
+                    </label>
+                    <textarea id="diagnostico" name="diagnostico" 
+                              placeholder="Describa detalladamente el problema encontrado en el equipo..."
+                              required></textarea>
+                    <div class="character-count" id="diagnostico-count">0 caracteres</div>
+                </div>
 
-        <input type="submit" value="Registrar Diagnóstico">
-    </form>
+                <div class="form-group">
+                    <label for="solucion" class="required">
+                        <span class="icon"></span>Solución Aplicada
+                    </label>
+                    <textarea id="solucion" name="solucion" 
+                              placeholder="Describa la solución técnica aplicada al equipo..."
+                              required></textarea>
+                    <div class="character-count" id="solucion-count">0 caracteres</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="required">
+                        <span class="icon"></span>Tipo de Solución
+                    </label>
+                    <div class="tipo-solucion-group">
+                        <label class="tipo-option" id="option-correctiva">
+                            <input type="radio" name="tipo" value="correctiva" required>
+                            <div> Correctiva</div>
+                            <small>Reparación de fallas existentes</small>
+                        </label>
+                        <label class="tipo-option" id="option-preventiva">
+                            <input type="radio" name="tipo" value="preventiva" required>
+                            <div> Preventiva</div>
+                            <small>Prevención de futuros problemas</small>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <a href="/diagnostico/listado/" class="btn btn-secondary">
+                        ← Volver al Listado
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                         Registrar Diagnóstico
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Información adicional -->
+        <div style="margin-top: 20px; text-align: center; color: #666; font-size: 14px;">
+            <p> <strong>Nota:</strong> El diagnóstico será registrado en el sistema y estará disponible para el módulo de entrega.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const diagnosticoTextarea = document.getElementById('diagnostico');
+            const solucionTextarea = document.getElementById('solucion');
+            const diagnosticoCount = document.getElementById('diagnostico-count');
+            const solucionCount = document.getElementById('solucion-count');
+            const tipoOptions = document.querySelectorAll('.tipo-option');
+
+            // Contador de caracteres
+            function updateCharacterCount(textarea, countElement) {
+                countElement.textContent = textarea.value.length + ' caracteres';
+            }
+
+            diagnosticoTextarea.addEventListener('input', function() {
+                updateCharacterCount(this, diagnosticoCount);
+            });
+
+            solucionTextarea.addEventListener('input', function() {
+                updateCharacterCount(this, solucionCount);
+            });
+
+            // Inicializar contadores
+            updateCharacterCount(diagnosticoTextarea, diagnosticoCount);
+            updateCharacterCount(solucionTextarea, solucionCount);
+
+            // Selección de tipo de solución
+            tipoOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remover selección anterior
+                    tipoOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Agregar selección actual
+                    this.classList.add('selected');
+                    
+                    // Marcar el radio button
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                });
+            });
+
+            // Validación del formulario
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                const requiredFields = form.querySelectorAll('[required]');
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.style.borderColor = '#dc3545';
+                        isValid = false;
+                    } else {
+                        field.style.borderColor = '#28a745';
+                    }
+                });
+
+                // Validar tipo de solución
+                const tipoSelected = form.querySelector('input[name="tipo"]:checked');
+                if (!tipoSelected) {
+                    alert('Por favor, seleccione el tipo de solución.');
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Por favor, complete todos los campos obligatorios.');
+                }
+            });
+
+            // Resetear estilos cuando el usuario empiece a escribir
+            const inputs = form.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.style.borderColor = '#28a745';
+                    } else {
+                        this.style.borderColor = '#ddd';
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

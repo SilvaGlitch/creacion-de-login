@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Detalle del Equipo</title>
+    <title>Detalle del Equipo - Clínica del PC</title>
     <style>
         body {
             display: flex;
             justify-content: center; 
             align-items: center;    
-            height: 100vh;          
+            min-height: 100vh;          
             margin: 0;              
             font-family: Arial, sans-serif;
             background-color: #5a4da1;
         }
         div.container {
-            padding: 20px;
+            padding: 30px;
             background: white;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            max-width: 500px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            max-width: 600px;
             width: 90%;
+        }
+        h1 {
+            color: #6b0b0b;
             text-align: center;
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
@@ -28,38 +32,110 @@
         }
         th, td {
             padding: 12px 15px;
-            border: 1px solid #000000;
+            border: 1px solid #ddd;
             text-align: left;
         }
         th {
             background-color: #b93f3f;
+            color: white;
             font-weight: bold;
+            width: 30%;
         }
-        a {
+        td {
+            background-color: #f9f9f9;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 25px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #43469e;
+            color: white;
             text-decoration: none;
-            color: #c63232;
+            border-radius: 5px;
+            margin: 0 10px;
+            transition: background-color 0.3s;
         }
-        a:hover {
-            text-decoration: underline;
+        .btn:hover {
+            background-color: #353780;
+            text-decoration: none;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        .status-recibido {
+            background-color: #17a2b8;
+        }
+        .status-reparacion {
+            background-color: #ffc107;
+            color: black;
+        }
+        .status-entregado {
+            background-color: #28a745;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Detalle del Equipo de {{ equipo.cliente }}</h1>
+        <h1>📋 Detalle del Equipo</h1>
 
         <table>
             <tr>
-                <th>Equipo</th>
-                <td>{{ equipo.equipo }}</td>
+                <th>ID del Equipo</th>
+                <td><strong>#{{ equipo.id }}</strong></td>
             </tr>
             <tr>
-                <th>Problema</th>
-                <td>{{ equipo.problema }}</td>
+                <th>Cliente</th>
+                <td>{{ equipo.cliente }}</td>
+            </tr>
+            <tr>
+                <th>Contacto</th>
+                <td>
+                    {% if equipo.contacto %}
+                        {{ equipo.contacto }}
+                    {% else %}
+                        <span style="color: #888; font-style: italic;">No especificado</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Descripción de la Falla</th>
+                <td>{{ equipo.descripcion_falla }}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>
+                    {% if equipo.estado == 'entregado' %}
+                        <span class="status-badge status-entregado">✅ Entregado</span>
+                    {% elif equipo.estado == 'en_reparacion' %}
+                        <span class="status-badge status-reparacion">🔧 En Reparación</span>
+                    {% else %}
+                        <span class="status-badge status-recibido">📥 Recibido</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Fecha de Recepción</th>
+                <td>{{ equipo.fecha_recepcion|date:"d/m/Y H:i" }}</td>
             </tr>
         </table>
 
-        <a href="/recepcion/listado/">Volver al listado</a>
+        <div class="button-group">
+            <a href="{% url 'listado_equipos' %}" class="btn">← Volver al Listado</a>
+            <a href="{% url 'editar_equipo' equipo.id %}" class="btn btn-secondary">✏️ Editar Equipo</a>
+        </div>
     </div>
 </body>
 </html>

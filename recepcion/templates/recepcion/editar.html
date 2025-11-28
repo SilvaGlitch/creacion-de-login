@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Equipo - Clínica del PC</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #43469e;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #6b0b0b;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #43469e;
+        }
+
+        .btn-primary:hover {
+            background-color: #353780;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-warning {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Editar Equipo</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 20px;">
+            Editando equipo de: <strong>{{ equipo.cliente }}</strong>
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="cliente" class="required">Cliente</label>
+                <input type="text" id="cliente" name="cliente" value="{{ equipo.cliente }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contacto">Contacto</label>
+                <input type="text" id="contacto" name="contacto" value="{{ equipo.contacto }}" 
+                       placeholder="Teléfono o email del cliente">
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion_falla" class="required">Descripción de la Falla</label>
+                <textarea id="descripcion_falla" name="descripcion_falla" required>{{ equipo.descripcion_falla }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="estado">Estado del Equipo</label>
+                <select id="estado" name="estado">
+                    <option value="recibido" {% if equipo.estado == 'recibido' %}selected{% endif %}>
+                         Recibido
+                    </option>
+                    <option value="en_reparacion" {% if equipo.estado == 'en_reparacion' %}selected{% endif %}>
+                         En Reparación
+                    </option>
+                    <option value="entregado" {% if equipo.estado == 'entregado' %}selected{% endif %}>
+                         Entregado
+                    </option>
+                </select>
+            </div>
+
+            <div class="button-group">
+                <a href="{% url 'listado_equipos' %}" class="btn btn-secondary">← Cancelar</a>
+                <button type="submit" class="btn btn-warning"> Guardar Cambios</button>
+            </div>
+        </form>
+
+        {% if messages %}
+            <div style="margin-top: 20px; padding: 10px; background-color: #d4edda; border-radius: 5px; border-left: 4px solid #28a745;">
+                {% for message in messages %}
+                    <p style="margin: 0; color: #155724;"><strong> {{ message }}</strong></p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

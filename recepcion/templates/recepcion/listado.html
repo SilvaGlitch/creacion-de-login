@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Listado de Equipos</title>
+    <title>Listado de Equipos - Clínica del PC</title>
     <style>
         body {
             display: flex;
@@ -19,13 +19,14 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 800px;
+            width: 95%;
+            max-width: 1200px;
             text-align: center;
         }
 
         h1 {
             margin-bottom: 20px;
+            color: #333;
         }
 
         table {
@@ -35,8 +36,9 @@
         }
 
         th, td {
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
+            text-align: left;
         }
 
         th {
@@ -47,6 +49,10 @@
 
         tr:nth-child(even) {
             background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f0f0f0;
         }
 
         a {
@@ -61,42 +67,261 @@
         .no-data {
             color: #888;
             font-style: italic;
+            padding: 20px;
         }
 
         .link-bottom {
             display: inline-block;
             margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #43469e;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .link-bottom:hover {
+            background-color: #353780;
+            text-decoration: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 12px;
+            color: white;
+            transition: background-color 0.3s;
+        }
+
+        .btn-view {
+            background-color: #17a2b8;
+        }
+
+        .btn-view:hover {
+            background-color: #138496;
+            text-decoration: none;
+        }
+
+        .btn-edit {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .btn-edit:hover {
+            background-color: #e0a800;
+            text-decoration: none;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+            text-decoration: none;
+        }
+
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .title-section h1 {
+            margin: 0;
+            color: #6b0b0b;
+        }
+
+        .title-section p {
+            margin: 5px 0 0 0;
+            color: #666;
+        }
+
+        .add-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .add-button:hover {
+            background-color: #218838;
+            text-decoration: none;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-recibido {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .status-reparacion {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .status-entregado {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .summary-cards {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #43469e, #6b0b0b);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            width: 30%;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .summary-card h3 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .summary-card p {
+            margin: 5px 0 0 0;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Listado de Equipos Recibidos</h1>
+        <!-- Encabezado mejorado -->
+        <div class="header-section">
+            <div class="title-section">
+                <h1> Listado de Equipos Recibidos</h1>
+                <p>Sistema de Gestión - Clínica del PC</p>
+            </div>
+            
+        </div>
+
+        <!-- Tarjetas de resumen -->
+        <div class="summary-cards">
+            <div class="summary-card">
+                <h3>{{ equipos.count }}</h3>
+                <p>Total Equipos</p>
+            </div>
+            <div class="summary-card">
+                <h3>{{ equipos.count }}</h3>
+                <p>En Sistema</p>
+            </div>
+            <div class="summary-card">
+                <h3>INACAP</h3>
+                <p>Clínica del PC</p>
+            </div>
+        </div>
 
         {% if equipos %}
             <table>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Contacto</th>
-                    <th>Problema</th>
-                    <th>Fecha Recepción</th>
-                    <th>Estado</th>
-                </tr>
-                {% for equipo in equipos %}
-                <tr>
-                    <td>{{ equipo.cliente }}</td>
-                    <td>{{ equipo.contacto }}</td>
-                    <td>{{ equipo.descripcion_falla }}</td>
-                    <td>{{ equipo.fecha_recepcion }}</td>
-                    <td>{{ equipo.estado }}</td>
-                </tr>
-                {% endfor %}
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Contacto</th>
+                        <th>Problema Reportado</th>
+                        <th>Fecha Recepción</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for equipo in equipos %}
+                    <tr>
+                        <td><strong>#{{ equipo.id }}</strong></td>
+                        <td>{{ equipo.cliente }}</td>
+                        <td>{{ equipo.contacto|default:"No especificado" }}</td>
+                        <td>{{ equipo.descripcion_falla|truncatewords:8 }}</td>
+                        <td>{{ equipo.fecha_recepcion|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if equipo.estado == 'entregado' %}
+                                <span class="status-badge status-entregado"> Entregado</span>
+                            {% elif equipo.estado == 'en_reparacion' %}
+                                <span class="status-badge status-reparacion"> Reparación</span>
+                            {% else %}
+                                <span class="status-badge status-recibido"> Recibido</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <!-- Ver Detalles - Usando la URL por ID -->
+                                <a href="{% url 'detalle_equipo' equipo.id %}" class="btn btn-view" title="Ver detalles">
+                                     Ver
+                                </a>
+                                <!-- Editar -->
+                                <a href="{% url 'editar_equipo' equipo.id %}" class="btn btn-edit" title="Editar equipo">
+                                     Editar
+                                </a>
+                                <!-- Eliminar -->
+                                <a href="{% url 'eliminar_equipo' equipo.id %}" class="btn btn-delete" title="Eliminar equipo">
+                                     Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         {% else %}
-            <p class="no-data">No hay equipos registrados.</p>
+            <div class="no-data">
+                <h3>No hay equipos registrados</h3>
+                <p>Comienza agregando el primer equipo al sistema</p>
+                <a href="{% url 'registrar_equipo' %}" class="link-bottom">Agregar Primer Equipo</a>
+            </div>
         {% endif %}
 
-        <a href="/recepcion/registrar/" class="link-bottom">Registrar otro equipo</a>
+        <!-- Mensajes del sistema -->
+        {% if messages %}
+            <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; border-left: 4px solid #28a745;">
+                {% for message in messages %}
+                    <p style="margin: 0; color: #155724;"><strong>✅ {{ message }}</strong></p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div style="margin-top: 30px; display: flex; justify-content: space-between;">
+            
+            <a href="{% url 'inicio' %}" class="link-bottom" style="background-color: #6b0b0b;"> Volver al Inicio</a>
+            <a href="{% url 'registrar_equipo' %}" class="link-bottom"> Registrar otro equipo</a>
+        </div>
     </div>
+
+    <script>
+        // Confirmación para eliminaciones
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!confirm('¿Está seguro de que desea eliminar este equipo? Esta acción no se puede deshacer.')) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

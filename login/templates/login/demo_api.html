@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Demo API - Clínica PC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #514f89; /* Mismo color que tu login */
+        }
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .nav-buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .nav-buttons a {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px 20px;
+            background: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .nav-buttons a:hover {
+            background: #0056b3;
+        }
+        .api-section {
+            margin: 25px 0;
+            padding: 20px;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        .api-result {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            min-height: 50px;
+            overflow-x: auto;
+        }
+        .btn-api {
+            background: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 8px 5px;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        .btn-api:hover {
+            background: #218838;
+        }
+        .btn-secondary {
+            background: #6c757d;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .status-online {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .status-offline {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        .step {
+            margin: 15px 0;
+            padding: 12px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        code {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .event-log {
+            height: 200px;
+            overflow-y: auto;
+            background: #272822;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+        .demo-credentials {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navegación -->
+        <div class="nav-buttons">
+            <a href="/admin/" target="_blank"> Admin Django</a>
+            <a href="/login/" target="_blank"> Volver al Login</a>
+            <a href="/" target="_blank"> Página Principal</a>
+        </div>
+        
+        <h1> DEMOSTRACIÓN API REST - CLÍNICA PC</h1>
+        <p style="text-align: center; color: #666;">Esta página demuestra la integración de la API REST con Django y PostgreSQL</p>
+        
+        <!-- Credenciales demo -->
+        <div class="demo-credentials">
+            <strong> Credenciales para prueba:</strong><br>
+            • Usuario: <code>admin123</code><br>
+            • Contraseña: <code>admin123</code><br>
+            • Endpoint API: <code>http://localhost:8000/api/</code>
+        </div>
+        
+        <!-- Sección 1: Estado API -->
+        <div class="api-section">
+            <h2> 1. Verificar Estado de la API</h2>
+            <div class="step">
+                <strong>Endpoint:</strong> <code>GET /api/</code><br>
+                <button class="btn-api" onclick="checkAPI()"> Verificar Conexión</button>
+            </div>
+            <div id="api-status" class="api-result">Presiona el botón para verificar el estado de la API...</div>
+        </div>
+        
+        <!-- Sección 2: Autenticación -->
+        <div class="api-section">
+            <h2>2. Autenticación (Login API)</h2>
+            <div class="step">
+                <strong>Endpoint:</strong> <code>POST /api/token/login/</code><br>
+                <button class="btn-api" onclick="loginAPI()"> Iniciar Sesión en API</button>
+            </div>
+            <div id="login-result" class="api-result">Esperando autenticación...</div>
+        </div>
+        
+        <!-- Sección 3: Operaciones CRUD -->
+        <div class="api-section">
+            <h2>3. Operaciones CRUD</h2>
+            
+            <div class="step">
+                <strong>GET - Leer datos:</strong><br>
+                <button class="btn-api" onclick="getClientes()"> Listar Clientes</button>
+                <button class="btn-api" onclick="getEstadisticas()"> Ver Estadísticas</button>
+            </div>
+            
+            <div class="step">
+                <strong>POST - Crear datos:</strong><br>
+                <button class="btn-api" onclick="crearClienteDemo()">Crear Cliente Demo</button>
+                <button class="btn-api btn-secondary" onclick="testAllEndpoints()"> Probar Todos los Endpoints</button>
+            </div>
+            
+            <div id="crud-result" class="api-result">Los resultados de las operaciones aparecerán aquí...</div>
+        </div>
+        
+        <!-- Sección 4: Consola de eventos -->
+        <div class="api-section">
+            <h2> Consola de Eventos en Tiempo Real</h2>
+            <div id="event-log" class="event-log">
+                [Sistema] Página de demostración API cargada<br>
+                [Sistema] Listo para comenzar pruebas<br>
+            </div>
+            <button class="btn-api btn-secondary" onclick="clearLog()"> Limpiar Consola</button>
+            <button class="btn-api" onclick="exportLog()"> Exportar Log</button>
+        </div>
+        
+        <!-- Sección 5: Evidencia para Rúbrica -->
+        <div class="api-section">
+            <div class="step">
+                <strong>Para capturar en Postman/Insomnia:</strong>
+                <ol>
+                    <li>:D <code>POST /api/token/login/</code> → Obtener token</li>
+                    <li>:D <code>GET /api/clientes/</code> → Listar con token</li>
+                    <li>:D <code>POST /api/clientes/</code> → Crear nuevo registro</li>
+                    <li>:D <code>PUT/PATCH /api/clientes/{id}/</code> → Actualizar</li>
+                    <li>:D <code>DELETE /api/clientes/{id}/</code> → Eliminar</li>
+                </ol>
+            </div>
+            
+            <div class="step">
+                <strong>Comandos curl (Git Bash):</strong>
+                <div style="background: #272822; color: white; padding: 12px; border-radius: 5px; margin: 10px 0; font-size: 14px;">
+                    <code># 1. Login<br>curl -X POST http://localhost:8000/api/token/login/ \<br>  -H "Content-Type: application/json" \<br>  -d '{"username":"admin","password":"admin123"}'<br><br>
+                    # 2. Listar clientes<br>curl -X GET http://localhost:8000/api/clientes/ \<br>  -H "Authorization: Token TU_TOKEN_AQUI"</code>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pie de página -->
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #666;">
+            <p> <strong>Endpoints disponibles:</strong> 
+                <code>/api/clientes/</code> | 
+                <code>/api/equipos/</code> | 
+                <code>/api/diagnosticos/</code> | 
+                <code>/api/entregas/</code>
+            </p>
+            <p> <strong>Base de datos:</strong> PostgreSQL | <strong>Framework:</strong> Django REST Framework</p>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let apiToken = '';
+        const API_BASE_URL = 'http://localhost:8000/api';
+        
+        // Función para registrar eventos en consola
+        function logEvent(message) {
+            const now = new Date();
+            const time = now.toLocaleTimeString();
+            const logElement = document.getElementById('event-log');
+            logElement.innerHTML += `[${time}] ${message}<br>`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('event-log').innerHTML = 
+                '[Sistema] Consola limpiada<br>' +
+                '[Sistema] Listo para nuevas pruebas<br>';
+            logEvent('Consola limpiada por el usuario');
+        }
+        
+        function exportLog() {
+            const logContent = document.getElementById('event-log').innerText;
+            const blob = new Blob([logContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'api-demo-log.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            logEvent('Log exportado como archivo de texto');
+        }
+        
+        // 1. Verificar estado de la API
+        async function checkAPI() {
+            logEvent('Verificando conexión con la API...');
+            try {
+                const response = await fetch(`${API_BASE_URL}/`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const data = await response.json();
+                document.getElementById('api-status').innerHTML = 
+                    `<span class="status-online"> API CONECTADA CORRECTAMENTE</span><br><br>` +
+                    `<strong>Nombre:</strong> ${data.api || 'Clínica PC API'}<br>` +
+                    `<strong>Versión:</strong> ${data.version || '1.0'}<br>` +
+                    `<strong>Estado:</strong> <span class="status-online">Operacional</span><br>` +
+                    `<strong>URL Base:</strong> <code>${API_BASE_URL}</code>`;
+                
+                logEvent('API verificada: Conexión exitosa');
+            } catch (error) {
+                document.getElementById('api-status').innerHTML = 
+                    `<span class="status-offline"> ERROR DE CONEXIÓN CON LA API</span><br><br>` +
+                    `<strong>Error:</strong> ${error.message}<br>` +
+                    `<strong>Solución:</strong> Asegúrate de que:<br>` +
+                    `1. El servidor Django esté ejecutándose<br>` +
+                    `2. La URL ${API_BASE_URL} sea accesible<br>` +
+                    `3. Las migraciones estén aplicadas`;
+                
+                logEvent(`Error verificando API: ${error.message}`);
+            }
+        }
+        
+        // 2. Login en la API
+        async function loginAPI() {
+            logEvent('Iniciando proceso de autenticación...');
+            const loginData = {
+                username: 'admin',
+                password: 'admin123'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/token/login/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(loginData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.non_field_errors || 'Credenciales incorrectas');
+                }
+                
+                const data = await response.json();
+                apiToken = data.token;
+                
+                document.getElementById('login-result').innerHTML = 
+                    `<span class="status-online"> AUTENTICACIÓN EXITOSA</span><br><br>` +
+                    `<strong>Token:</strong> <code>${apiToken.substring(0, 30)}...</code><br>` +
+                    `<strong>Usuario:</strong> ${data.username}<br>` +
+                    `<strong>ID Usuario:</strong> ${data.user_id}<br>` +
+                    `<strong>Email:</strong> ${data.email || 'No especificado'}<br><br>` +
+                    `<em>Token válido para todas las operaciones CRUD</em>`;
+                
+                logEvent(`Autenticación exitosa como ${data.username}`);
+                
+                // Habilitar botones CRUD
+                document.querySelectorAll('.btn-api:not([onclick*="checkAPI"]):not([onclick*="loginAPI"])')
+                    .forEach(btn => btn.disabled = false);
+                    
+            } catch (error) {
+                document.getElementById('login-result').innerHTML = 
+                    `<span class="status-offline"> ERROR DE AUTENTICACIÓN</span><br><br>` +
+                    `<strong>Error:</strong> ${error.message}<br>` +
+                    `<strong>Posibles causas:</strong><br>` +
+                    `• Credenciales incorrectas<br>` +
+                    `• Usuario no existe<br>` +
+                    `• Token authentication no configurado`;
+                
+                logEvent(`Error de autenticación: ${error.message}`);
+            }
+        }
+        
+        // 3. Obtener lista de clientes
+        async function getClientes() {
+            if (!apiToken) {
+                alert(' Primero debes autenticarte usando el botón "Iniciar Sesión en API"');
+                return;
+            }
+            
+            logEvent('Solicitando lista de clientes...');
+            try {
+                const response = await fetch(`${API_BASE_URL}/clientes/`, {
+                    headers: { 'Authorization': `Token ${apiToken}` }
+                });
+                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const data = await response.json();
+                const count = Array.isArray(data) ? data.length : data.count || 0;
+                
+                let clientsHtml = '';
+                if (Array.isArray(data) && data.length > 0) {
+                    clientsHtml = data.slice(0, 5).map(cliente => 
+                        `• ${cliente.nombre} (ID: ${cliente.id}) - ${cliente.email}`
+                    ).join('<br>');
+                    if (data.length > 5) clientsHtml += `<br>... y ${data.length - 5} más`;
+                }
+                
+                document.getElementById('crud-result').innerHTML = 
+                    `<span class="status-online"> ${count} CLIENTES ENCONTRADOS</span><br><br>` +
+                    (clientsHtml || 'No hay clientes registrados') +
+                    `<br><br><em>Datos obtenidos directamente desde PostgreSQL vía API REST</em>`;
+                
+                logEvent(`Obtenidos ${count} clientes de la base de datos`);
+                
+            } catch (error) {
+                document.getElementById('crud-result').innerHTML = 
+                    `<span class="status-offline"> ERROR AL OBTENER CLIENTES</span><br><br>` +
+                    `<strong>Error:</strong> ${error.message}<br>` +
+                    `<strong>Detalles:</strong> Revisa la consola del navegador (F12)`;
+                
+                logEvent(`Error obteniendo clientes: ${error.message}`);
+                console.error('Error detalles:', error);
+            }
+        }
+        
+        // 4. Obtener estadísticas
+        async function getEstadisticas() {
+            if (!apiToken) {
+                alert(' Primero debes autenticarte');
+                return;
+            }
+            
+            logEvent('Obteniendo estadísticas del sistema...');
+            try {
+                // Primero intentar endpoint de estadísticas
+                let response = await fetch(`${API_BASE_URL}/estadisticas/`, {
+                    headers: { 'Authorization': `Token ${apiToken}` }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const statsHtml = Object.entries(data)
+                        .map(([key, value]) => `<strong>${key.replace('_', ' ')}:</strong> ${value}`)
+                        .join('<br>');
+                    
+                    document.getElementById('crud-result').innerHTML = 
+                        `<span class="status-online">ESTADÍSTICAS DEL SISTEMA</span><br><br>` +
+                        statsHtml;
+                    
+                    logEvent('Estadísticas obtenidas correctamente');
+                } else {
+                    // Si no hay endpoint de estadísticas, contar manualmente
+                    document.getElementById('crud-result').innerHTML = 
+                        `<span class="status-online">ENDPOINT DE ESTADÍSTICAS NO CONFIGURADO</span><br><br>` +
+                        `Usa "Listar Clientes" para ver datos existentes`;
+                    logEvent('Endpoint /estadisticas/ no disponible');
+                }
+                
+            } catch (error) {
+                document.getElementById('crud-result').innerHTML = 
+                    `<span class="status-offline"> ERROR EN ESTADÍSTICAS</span><br><br>` +
+                    `${error.message}`;
+                logEvent(`Error en estadísticas: ${error.message}`);
+            }
+        }
+        
+        // 5. Crear cliente demo
+        async function crearClienteDemo() {
+            if (!apiToken) {
+                alert(' Primero debes autenticarte');
+                return;
+            }
+            
+            logEvent('Creando cliente de demostración...');
+            const timestamp = Date.now().toString().slice(-4);
+            const clienteData = {
+                nombre: `Cliente Demo ${timestamp}`,
+                email: `demo${timestamp}@clinicapc.com`,
+                telefono: `+56 9 ${Math.floor(10000000 + Math.random() * 90000000)}`
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/clientes/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${apiToken}`
+                    },
+                    body: JSON.stringify(clienteData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(JSON.stringify(errorData));
+                }
+                
+                const data = await response.json();
+                
+                document.getElementById('crud-result').innerHTML = 
+                    `<span class="status-online"> CLIENTE CREADO EXITOSAMENTE</span><br><br>` +
+                    `<strong>ID asignado:</strong> ${data.id}<br>` +
+                    `<strong>Nombre:</strong> ${data.nombre}<br>` +
+                    `<strong>Email:</strong> ${data.email}<br>` +
+                    `<strong>Teléfono:</strong> ${data.telefono}<br>` +
+                    `<strong>Fecha registro:</strong> ${new Date().toLocaleString()}<br><br>` +
+                    `<em> Este registro ahora está persistido en PostgreSQL<br>` +
+                    ` Puede verse en <a href="/admin/" target="_blank">Admin Django</a><br>` +
+                    ` Puede consultarse via API</em>`;
+                
+                logEvent(`Cliente creado: ${data.nombre} (ID: ${data.id}) - Persistido en BD`);
+                
+                // Actualizar lista después de 2 segundos
+                setTimeout(getClientes, 2000);
+                
+            } catch (error) {
+                document.getElementById('crud-result').innerHTML = 
+                    `<span class="status-offline"> ERROR AL CREAR CLIENTE</span><br><br>` +
+                    `<strong>Error:</strong> ${error.message}<br>` +
+                    `<strong>Posible causa:</strong> Validación de datos o permisos`;
+                
+                logEvent(`Error creando cliente: ${error.message}`);
+            }
+        }
+        
+        // 6. Probar todos los endpoints automáticamente
+        async function testAllEndpoints() {
+            if (!apiToken) {
+                alert('Primero haz login');
+                return;
+            }
+            
+            logEvent('=== INICIANDO PRUEBA COMPLETA DE ENDPOINTS ===');
+            
+            // Prueba GET clientes
+            await getClientes();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Prueba POST crear cliente
+            await crearClienteDemo();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Prueba GET estadísticas
+            await getEstadisticas();
+            
+            logEvent('=== PRUEBA COMPLETA FINALIZADA ===');
+        }
+        
+        // Inicializar página
+        window.onload = function() {
+            logEvent('Página de demostración API cargada');
+            logEvent('Servidor: Django REST Framework + PostgreSQL');
+            checkAPI();
+            
+            // Deshabilitar botones CRUD inicialmente (requieren login)
+            document.querySelectorAll('.btn-api:not([onclick*="checkAPI"]):not([onclick*="loginAPI"])')
+                .forEach(btn => {
+                    btn.disabled = true;
+                    btn.title = 'Requiere autenticación primero';
+                });
+        };
+    </script>
+</body>
+</html>

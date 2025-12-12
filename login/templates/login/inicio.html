@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Menú Principal</title>
+    <title>Menú Principal - Clínica PC</title>
     <style>
         body {
             display: flex;
@@ -51,14 +51,26 @@
             text-decoration: none;
             color: white;
             background-color: #007BFF;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 5px;
             display: inline-block;
             transition: background 0.3s;
+            font-size: 16px;
+            width: 200px;
         }
 
         a:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-api {
+            background-color: #28a745 !important; /* Verde para API */
+        }
+
+        .btn-api:hover {
+            background-color: #218838 !important;
         }
 
         button {
@@ -69,10 +81,21 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s;
+            margin-top: 20px;
+            font-size: 16px;
         }
 
         button:hover {
             background-color: #a71d2a;
+        }
+
+        .api-note {
+            background-color: #e8f5e8;
+            border: 1px solid #28a745;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 15px 0;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -80,26 +103,35 @@
     <div class="container">
         <!-- Tarjeta de bienvenida -->
         <div class="card">
-            <h1>Bienvenido a Clínica del PC</h1>
-            <p>Selecciona el módulo al que deseas acceder:</p>
+            <h1> Bienvenido a Clínica del PC</h1>
+            <p>Sistema de gestión con API REST integrada</p>
+         
         </div>
 
         <!-- Tarjeta de opciones -->
         <div class="card">
+            <h2> Módulos del Sistema</h2>
             <ul>
-                <li><a href="/recepcion/">Recepción</a></li>
-                <li><a href="/diagnostico/listado/">Diagnóstico</a></li>
-                <li><a href="/entrega/">Entrega</a></li>
+                <li><a href="/recepcion/"> Recepción</a></li>
+                <li><a href="/diagnostico/listado/"> Diagnóstico</a></li>
+                <li><a href="/entrega/"> Entrega</a></li>
+                
+                <!-- NUEVO: Enlace a Demo API -->
+                <li><a href="/login/api-demo/" target="_blank" class="btn-api"> API </a></li>
             </ul>
+
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                <p style="color: #666; font-size: 14px;">
+                    <strong>Credenciales API demo:</strong><br>
+                    Usuario: <code>admin</code> | Contraseña: <code>admin123</code>
+                </p>
+            </div>
 
             <form action="{% url 'logout' %}" method="post">
                 {% csrf_token %}
-                <button type="submit">Cerrar sesión</button>
+                <button type="submit">🚪 Cerrar sesión</button>
             </form>
-
         </div>
     </div>
 </body>
 </html>
-
-

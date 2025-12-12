@@ -37,3 +37,9 @@ def inicio(request):
         return redirect('/')  
 
     return render(request, 'login/inicio.html')
+
+# En login/views.py, agrega esta función:
+
+def demo_api(request):
+    """Página de demostración de la API REST"""
+    return render(request, 'login/demo_api.html')
